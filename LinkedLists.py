@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 
-"""
-Node is the basic node structure to use in the linked list
-""""
+''' Node is the basic node structure to use in the linked list '''
 
 class Node(object):
 	def __init__(self, data=None):
@@ -45,9 +43,13 @@ class LinkedList(object):
 		Adds a new element into the container
 		"""
 		node = Node(data)
-		last = self.__tail
-		last.next = node
-		self.__tail = node
+		if self.__head == None:
+			self.__head = node
+		if self.__tail == None:
+			self.__tail = self.__head
+		else:
+			self.__tail.next = node
+			self.__tail = node
 		self.__cnt += 1
 
 	def __find(self, data):
@@ -56,7 +58,7 @@ class LinkedList(object):
 		while node != None:
 			prev = node
 			node = node.next
-			if (node.data == data)
+			if (node.data == data):
 				break
 
 		if node == None:
@@ -124,8 +126,10 @@ class LinkedList(object):
 		"""
 		This method adds the iterator support (for each i in container x)
 		"""
-		for (node = self.__head; node != self.__tail; node.next):
+		node = self.__head
+		while (node.next != None):
 			yield node
+			node = node.next
 		raise StopIteration
 
 
