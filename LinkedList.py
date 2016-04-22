@@ -60,24 +60,24 @@ class LinkedList:
         self._add(node)
 
     def add_node(self, node):
-        """ 
+        """
         Adds a preconstructed node to the tail of the list
         """
         if (node == None):
             raise ValueError("New node can't be none")
-        self._add(node)        
+        self._add(node)
 
     def _find(self, data):
-        node = self._head
         prev = None
+        node = self._head
         while node != None:
             prev = node
             if (node.data == data):
-                break
+                return prev, node
             node = node.next
-        if node == None:
-            raise IndexError("Element was not found")
-        return prev, node
+        # Node was not found
+        raise IndexError("Element was not found")
+
 
     def delete(self, data):
         """
@@ -96,7 +96,7 @@ class LinkedList:
         self.__cnt -= 1
 
     def clear(self):
-        """ 
+        """
         Deletes all nodes from the list
         """
         while (self._head != None):
@@ -105,7 +105,7 @@ class LinkedList:
             del node
         self._head = None
         self._tail = None
-        
+
     @property
     def count(self):
         return self.__len__()
@@ -136,7 +136,7 @@ class LinkedList:
 
     def __contains__(self, data):
         """
-        Supporting "in" call (is 1 in list?)
+        Supporting "in" call (is X in list?)
         """
         try:
             self._find(data)
@@ -168,10 +168,10 @@ class LinkedList:
         node = self._head
         str = ''
         while node != None:
-           str += '{} -> '.format(node)
+           str += '{} -> '.format(node.data)
            node = node.next
         str += 'None'
-        return str 
+        return str
 
 
 if __name__ == '__main__':
@@ -181,7 +181,7 @@ if __name__ == '__main__':
         def __init__(self, *args, **kwargs):
             super(testLinkedList, self).__init__(*args, **kwargs)
             self._list = LinkedList()
-            
+
         def setUp(self):
             self._list.clear()
 
@@ -211,7 +211,7 @@ if __name__ == '__main__':
             self._list.delete('1234')
             self.assertEqual(len(self._list), 1)
             self.assertEqual(self._list.count, 1)
-        
+
         # Positioning -> head
         def test_head(self):
             print("Testing positioning -> head")
@@ -221,7 +221,7 @@ if __name__ == '__main__':
             self.assertNotEqual(head, None)
             self.assertEqual(head.next, self._list.tail)
             self.assertEqual(head.data, 1234)
-            
+
 
         # Positioning -> tail
         def test_tail(self):
@@ -256,10 +256,23 @@ if __name__ == '__main__':
             node1 = Node(300)
             node2 = Node(1345)
             node3 = Node('aaaaa')
+            self._list.add_node(node1)
+            self._list.add_node(node3)
+            self._list.add_node(node2)
             self.assertEqual(300 in self._list, True)
             self.assertEqual(2000 in self._list, False)
             self.assertEqual('aaaaa' in self._list, True)
 
+        # Test string output
+        def test_string(self):
+            strt = ''
+            for i in range(10):
+                self._list.add(i)
+                strt += '{} -> '.format(i)
+            strt += 'None'
+            self.assertEqual(str(self._list), strt)
+
+    # Setup testSuite and run the tests
     suite = unittest.TestSuite()
     suite = unittest.defaultTestLoader.loadTestsFromTestCase(testLinkedList)
-    unittest.TextTestRunner().run(suite) 
+    unittest.TextTestRunner().run(suite)
