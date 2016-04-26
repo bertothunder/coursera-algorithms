@@ -19,13 +19,17 @@ class LLStack(object):
 		self._list = LinkedList()
 		if (size):
 			for n in range(size):
-				self.push()
+				self.push(Node())
 
 	def push(self, data=None):
 		self._list.add(data)
 
+	def pop(self):
+		del self._list[-1]
+
 	def __len__(self):
 		return len(self._list)
+
 
 if __name__ == '__main__':
 	import unittest
