@@ -1,35 +1,6 @@
 #!/usr/bin/env python3
 
-''' Node is the basic node structure to use in the linked list '''
-
-class Node(object):
-    def __init__(self, data=None):
-        self._data = data
-        self.__next = None
-
-    @property
-    def data(self):
-        return self._data
-
-    @data.setter
-    def data(self, data=None):
-        self._data = data
-
-    @property
-    def next(self):
-        return self.__next
-
-    @next.setter
-    def next(self, next=None):
-        self.__next = next
-
-    def __cmp__(self, other):
-        # Magic method for comparison
-        return self._data == other.data
-
-    def __str__(self):
-        return self._data
-
+from Node import Node
 
 """
 The Array-based LinkedList implementation.
