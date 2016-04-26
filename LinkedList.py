@@ -38,25 +38,33 @@ class LinkedList:
             raise ValueError("New node can't be none")
         self._add(node)
 
+    """
+    Performs a lookup from head to tail looking for the node with the specific data on it.
+    :returns: pointer to node with the data, and previous node
+    :except: if node is not found with the data, raises ValueError
+    """
     def _find(self, data):
         prev = None
         node = self._head
         while node != None:
-            prev = node
             if (node.data == data):
                 return prev, node
+            prev = node
             node = node.next
         # Node was not found
-        raise IndexError("Element was not found")
+        raise ValueError("Element was not found")
 
 
     def delete(self, data):
         """
         Deletes the given element.
-        :except: IndexError if no node is found with the given data on it
+        :except: ValueError if no node is found with the given data on it
         """
         prev, node = self._find(data)
-        prev.next = node.next
+        # Found head
+        if (prev != None):
+            prev.next = node.next
+        # Found tail
         if node.next == None:
             # move tail
             self._tail = prev
@@ -95,13 +103,13 @@ class LinkedList:
 
     def __getitem__(self, data):
         """
-        :except: IndexError: no node containing given data could be found
+        :except: ValueError: no node containing given data could be found
         """
         return self._find(data)
 
     def __delitem__(self, data):
         """
-        :except: IndexError: no node containing given data could be deleted
+        :except: ValueError: no node containing given data could be deleted
         """
         self.delete(data)
 
@@ -111,7 +119,7 @@ class LinkedList:
         """
         try:
             self._find(data)
-        except IndexError:
+        except ValueError:
             return False
         return True
 
@@ -223,7 +231,8 @@ if __name__ == '__main__':
 
         # It fails, check out why!
         # Test contains idiom
-        def test_find(self):
+        def test_contains(self):
+            print("Testing contains")
             node1 = Node(300)
             node2 = Node(1345)
             node3 = Node('aaaaa')
@@ -236,12 +245,42 @@ if __name__ == '__main__':
 
         # Test string output
         def test_string(self):
+            print("Testing string representation")
             strt = ''
             for i in range(10):
                 self._list.add(i)
                 strt += '{} -> '.format(i)
             strt += 'None'
             self.assertEqual(str(self._list), strt)
+
+        """
+        For anyone not realizing it yet, the next two tests are **utterly** wrong: they're tightly
+        coupled to the internal implementation, not to the interface API.
+        I'm just testing my internal _find method is right, but in production code this
+        should ever pass a code review!
+        """
+        def test_find_raises(self):
+            print("Testing find raises exception ValueError")
+            self._list.add(100)
+            self._list.add(200)
+            self._list.add('aaaa')
+            self.assertRaises(ValueError, self._list._find, 'bbbb')
+
+        def test_find_get_nodes(self):
+            print("Testing find return the right pointers for data")
+            self._list.add(100)
+            self._list.add(200)
+            self._list.add('aaaa')
+            prev, node = self._list._find(200)
+            self.assertEqual(prev, self._list._head)
+            self.assertEqual(node, self._list._head.next)
+            prev, node = self._list._find(100)
+            self.assertEqual(prev, None)
+            self.assertEqual(node, self._list._head)
+            prev, node = self._list._find('aaaa')
+            self.assertEqual(prev, self._list._head.next)
+            self.assertEqual(node, self._list._tail)
+
 
     # Setup testSuite and run the tests
     suite = unittest.TestSuite()
