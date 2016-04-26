@@ -54,7 +54,6 @@ class LinkedList:
         :param: data: either the data to be added (a new node is created and added to the LinkedList), or the new node directly.
         """
         if (isinstance(data, Node)):
-            print("Adding node directly")
             self._add(data)
         else:
             node = Node(data)
@@ -140,8 +139,10 @@ class LinkedList:
         :returns: the node by the given index
         :except: IndexError if the index is beyond length or negative
         """
-        if index > self._cnt or index < 0:
-            raise IndexError("Out of index")
+        if index > self._cnt or (index < 0 and -index > self._cnt):
+            raise IndexError("Index out of range")
+        if (index < 0):
+            index = self._cnt + index
         idx = 0
         node = self._head
         while idx != index:
@@ -359,12 +360,25 @@ if __name__ == '__main__':
             self.assertEqual(self._list[2], node2)
             self.assertEqual(self._list[1], node3)
 
+        # Test negative indices on __getitem__
+        def test_get_item(self):
+            print("Testing __getitem__ with negative indices")
+            node1 = Node(300)
+            node2 = Node(1345)
+            node3 = Node('aaaaa')
+            self._list.add(node1)
+            self._list.add(node3)
+            self._list.add(node2)
+            self.assertEqual(self._list[-3], node1)
+            self.assertEqual(self._list[-2], node3)
+            self.assertEqual(self._list[-1], node2)
+
         # Tests exception raised on out of index
         def test_get_item_out_of_index(self):
             print("Testing __getitem__ raises IndexError")
             with self.assertRaises(IndexError) as context:
                 node = self._list[4]
-                self.assertTrue("Out of index" in context.exception)
+                self.assertTrue("Index out of range" in context.exception)
 
         # Tests __delitem__ implementation
         def test_del_item(self):
@@ -383,12 +397,30 @@ if __name__ == '__main__':
             self.assertEqual(self._list.head, node3)
             self.assertEqual(self._list[0], node3)
 
+        # Tests __delitem__ with negative indices
+        def test_del_item_negative_indices(self):
+            print("Testing __delitem__ with negative indices")
+            node1 = Node(300)
+            node2 = Node(1345)
+            node3 = Node('aaaaa')
+            self._list.add(node1)
+            self._list.add(node3)
+            self._list.add(node2)
+            # delete tail (1345)
+            del self._list[-1]
+            # after deleting tail, now 'aaaa' is tail
+            del self._list[-1]
+            # check head and length
+            self.assertTrue(len(self._list), 1)
+            self.assertEqual(self._list[0], self._list[-1])
+            self.assertEqual(self._list[-1], node1)
+
         # Tests exception raised on out of index
         def test_del_item_out_of_index(self):
             print("Testing __delitem__ raises IndexError on empty list")
             with self.assertRaises(IndexError) as context:
                 del self._list[1]
-                self.assertTrue("Out of index" in context.exception)
+                self.assertTrue("Index out of range" in context.exception)
 
 
     # Setup testSuite and run the tests
