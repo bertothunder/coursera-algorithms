@@ -1,4 +1,8 @@
 ''' Node is the basic node structure to use in the linked list '''
+__author__ = "Alberto Curro - bertothunder"
+__version__ = "1.0"
+__status__ = "No automation tests"
+__license__ = "AGPL"
 
 class Node(object):
     def __init__(self, data=None):
@@ -27,5 +31,3 @@ class Node(object):
 
     def __str__(self):
         return self.__data
-
-
