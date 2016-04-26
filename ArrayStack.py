@@ -1,33 +1,29 @@
 #!/usr/bin/env python3
 
-"""
-Stack implementation using the LinkedList implemented before. The advantages of using LinkedLists
-vs arrays is the constant speed factor of adding new data, while the overall total time is higher
-(if array uses amortized memory assignment and deleted, otherwise array is incredibly slower - O ~ 3N).
-
-"""
 __author__ = "Alberto Curro - bertothunder"
 __version__ = "1.0"
 __status__ = "Tested"
 __license__ = "AGPL"
 
-from LinkedList import LinkedList, Node
+"""
+Stack implementation using internally an array. The tradeoff of using the array is a less inmediate
+speed when adding/deleting nodes. Since Python implementation for array uses a highly optimized
+amortized memory management, this container will be useful if we are looking for a general speed
+(for the entire set of operations).
+"""
 
-class LLStack(object):
+class ArrayStack(object):
 	def __init__(self):
-		self._list = LinkedList()
+		self._list = []  # why I love Python: [None]*0 is [] :)
 
 	def push(self, data=None):
-		self._list.add(data)
+		self._list.append(data)
 
 	def pop(self):
 		try:
-			node = self._list[-1]
-			del self._list[-1]
-			return node.data
+			return self._list.pop()
 		except IndexError:
-			# Mimicing the array error message
-			raise IndexError("pop from empty stack")
+			raise IndexError("pop from an empty stack")
 
 	def __len__(self):
 		return len(self._list)
@@ -38,7 +34,7 @@ if __name__ == '__main__':
 
 	class StackTests(unittest.TestCase):
 		def setUp(self):
-			self._stack = LLStack()
+			self._stack = ArrayStack()
 
 		def test_index_error_pop_empty_stack(self):
 			print("Testing IndexError on pop() from empty stack")
