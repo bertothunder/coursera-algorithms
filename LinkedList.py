@@ -33,7 +33,10 @@ class Node(object):
         return self.__data == other.data
 
     def __str__(self):
-        return self.__data
+        # In production API, this would be just
+        # return str(self.__data)
+        # In this case this is educational.
+        return "Node with data: {}".format(str(self.__data))
 
 
 """
@@ -71,12 +74,20 @@ class LinkedList:
         """
         Deletes all nodes from the list
         """
-        while (self._head != None):
-            node = self._head
-            self._head = self._head.next
-            del node
+        #The lines below would be equivalent to:
+        #while (self._head != None):
+        #    node = self._head
+        #    self._head = self._head.next
+        #    del node
+        #
+        # because of Python's excellent memory garbage collector; once the
+        # nodes are not referred at all, the garbage collector will take all
+        # of them from memory.
+        # Note from Chris Barker: the usage of 'node' above would take a second
+        # reference, so it would not actually delete anything at all doing it that way.
         self._head = None
         self._tail = None
+        self._cnt = 0
 
     @property
     def count(self):
@@ -119,6 +130,10 @@ class LinkedList:
     def _find(self, data):
         """
         Performs a lookup from head to tail looking for the node with the specific data on it.
+        Please be aware that Python does not work with pointers, but references managed in the
+        garbage collector, so in this case we would be adding a second reference to the existing
+        node. This could bring up problems later if the reference is kept named, and hence
+        the garbage collector can't delete it completely.
         :returns: pointer to node with the data, and previous node
         :except: if node is not found with the data, raises ValueError
         """
@@ -173,7 +188,6 @@ class LinkedList:
         # No need to check index here, _find_by_index does that already
         node = self._find_by_index(index)
         if (index > 0):
-            print("Index > 0")
             prev = self._find_by_index(index-1)
         self._del(node, prev)
 
@@ -256,6 +270,14 @@ if __name__ == '__main__':
             self._list.delete('1234')
             self.assertEqual(len(self._list), 1)
             self.assertEqual(self._list.count, 1)
+
+        def test_count_after_clear(self):
+            print("Testing length after a clear() call")
+            self._list.add('1234')
+            self._list.add('3230')
+            self.assertEqual(len(self._list), 2)
+            self._list.clear()
+            self.assertEqual(len(self._list), 0)
 
         # Positioning -> head
         def test_head(self):
