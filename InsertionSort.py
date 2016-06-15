@@ -3,27 +3,29 @@
 import datetime
 from random import SystemRandom
 
-class SelectionSort(object):
+class InsertionSort(object):
     def __init__(self, elements):
         self._elements = elements
         self._last = len(elements)
-        self._minim = 0
 
     def sort(self):
         for idx in range(self._last):
             val1 = self._elements[idx]
-            self._minim = self._elements[idx]
             #print('element {}: {}'.format(idx, val1))
-            for idx2 in range(idx+1, self._last):
-                if (self._elements[idx2] <= self._minim):
-                    #print('Found new self._minim: {} - {}'.format(idx2, self._elements[idx2]))
-                    self._exchange(idx, idx2)
+            pidx = idx
+            idx2 = idx - 1
+            while idx2 >= 0:
+                if (self._elements[idx2] >= self._elements[pidx]):
+                    #print('Found new self._max: {} - {}'.format(idx2, self._elements[idx2]))
+                    self._exchange(pidx, idx2)
+                    pidx = idx2
+                idx2 = idx2 - 1
 
     def _exchange(self, idx1, idx2):
-        self._minim = self._elements[idx2]
+        self._max = self._elements[idx2]
         #print('switching {}:{} with {}:{}'.format(idx1,self._elements[idx1], idx2, self._elements[idx2]))
         self._elements[idx2] = self._elements[idx1]
-        self._elements[idx1] = self._minim
+        self._elements[idx1] = self._max
 
 
 if __name__ == '__main__':
@@ -33,6 +35,6 @@ if __name__ == '__main__':
     elements = [randomizer.randrange(1, num_elems) for i in range(num_elems)]
     randomizer.shuffle(elements)
     print("Unsorted: {}".format(elements))
-    sorter = SelectionSort(elements)
+    sorter = InsertionSort(elements)
     sorter.sort()
     print("Sorted: {}".format(elements))
