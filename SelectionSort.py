@@ -27,12 +27,22 @@ class SelectionSort(object):
 
 
 if __name__ == '__main__':
-    randomizer = SystemRandom()
-    randomizer.seed(datetime.datetime.now())
-    num_elems = randomizer.randrange(1, 1000)
-    elements = [randomizer.randrange(1, num_elems) for i in range(num_elems)]
-    randomizer.shuffle(elements)
-    print("Unsorted: {}".format(elements))
+    from sort_resources import hundred_sorted, hundred_random_unsorted, thousand_random_unsorted, thousand_sorted, ten_k_random_unsorted, ten_k_sorted
+
+    elements = hundred_random_unsorted
     sorter = SelectionSort(elements)
     sorter.sort()
-    print("Sorted: {}".format(elements))
+    assert(elements == hundred_sorted)
+    print("100 elements sorted as expected")
+
+    elements = thousand_random_unsorted
+    sorter = SelectionSort(elements)
+    sorter.sort()
+    assert(elements == thousand_sorted)
+    print("1000 elements sorted as expected")
+
+    elements = ten_k_random_unsorted
+    sorter = SelectionSort(elements)
+    sorter.sort()
+    assert(elements == ten_k_sorted)
+    print("10000 elements sorted as expected")
